@@ -5,7 +5,7 @@
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
+ * Redistributions of images must retain the above copyright notice.
  *
  * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  * @link          https://cakephp.org CakePHP(tm) Project
@@ -57,12 +57,13 @@ use Cake\Utility\Security;
 //         ->toServer();
 // }
 
+Plugin::load('Images');
 /*
  * Read configuration file and inject configuration into various
  * CakePHP classes.
  *
  * By default there is only one configuration file. It is often a good
- * idea to create multiple configuration files, and separate the configuration
+ * idea to create multiple configuration images, and separate the configuration
  * that changes from configuration that does not. This makes deployment simpler.
  */
 try {
@@ -71,6 +72,9 @@ try {
 } catch (\Exception $e) {
     exit($e->getMessage() . "\n");
 }
+
+// include images storage config
+include 'images.php';
 
 /*
  * Load an environment local configuration file.
