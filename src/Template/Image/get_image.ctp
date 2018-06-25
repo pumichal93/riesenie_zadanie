@@ -34,21 +34,34 @@ endif;
 
 <div class="row">
     <div class="column large-6">
-        <?= $this->Form->create(null, [
-        'url'=>['controller'=>'ImageUpload', 'action' => 'upload'],'id'=>'imageUploadForm']
-        ); ?>
-        <?= $this->Form->control('* Left (px)',['id'=>'imageLeft','type' => 'number', 'value' => 0]); ?>
-        <?= $this->Form->control('* Top (px)',['id'=>'imageTop','type' => 'number', 'value' => 0]); ?>
-        <?= $this->Form->control('* Width (px)',['id'=>'imageWidth','type' => 'number']); ?>
-        <?= $this->Form->control('* Height (px)',['id'=>'imageHeight','type' => 'number']); ?>
-        <?= $this->Form->button('Submit'); ?>
+        <div id="image-update"></div>
+        <?= $this->Flash->render() ?>
+        <?= $this->Form->create($image, [
+            'type' => 'file',
+            'url'=> [
+                'controller' => 'Image',
+                'action' => 'add'
+            ],
+            'name' => 'ImageForm',
+            'id' => 'imageUploadForm',
+            'data-update' => 'image-update',
+            ]
+            );
+        ?>
+        <?= $this->Form->input('image',['type' => 'file']); ?>
+        <?= $this->Form->control('left',['id'=>'imageLeft','type' => 'number']); ?>
+        <?= $this->Form->control('top',['id'=>'imageTop','type' => 'number', 'value' => '0']); ?>
+        <?= $this->Form->control('width',['id'=>'imageWidth','type' => 'number', 'value' => '0']); ?>
+        <?= $this->Form->control('height',['id'=>'imageHeight','type' => 'number', 'value' => '0']); ?>
+        <?= $this->Form->submit('Upload image'); ?>
         <div id="responseMessage"></div>
         <?= $this->Form->end(); ?>
+        <div id="image-update"></div>
     </div>
 
 </div>
 <div id="preview"></div>
 
-<?= $this->Html->script(['jquery/jquery.js', 'images/upload.js']); ?>
+<?= $this->Html->script(['jquery/jquery.js', 'global.js']); ?>
 </body>
 </html>
