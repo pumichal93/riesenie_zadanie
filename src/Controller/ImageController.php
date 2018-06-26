@@ -9,10 +9,16 @@
 namespace App\Controller;
 
 use App\Form\ImageForm;
+use Cake\Database\Connection;
+use Cake\Datasource\Paginator;
 use Cake\Event\Event;
+use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Core\Configure;
+use Cake\ORM\Query;
+use Cake\Datasource\ConnectionManager;
+use Cake\View\View;
 
 class ImageController extends AppController
 {
@@ -50,12 +56,17 @@ class ImageController extends AppController
 
     public function getImage() {
 
+        $images = $this->paginate($this->Images);
+
         // model-less forms use src/Form/ImageForm.php
         $image = new ImageForm();
-        $this->set(compact('image'));
+        $this->set(compact('image', 'images'));
     }
 
     public function add() {
+        //
+        $query = new Query(ConnectionManager::get('default'), TableRegistry::getTableLocator()->get('Images'));
+
         //$this->request->allowMethod('ajax');
         //$this->autoRender = 'false';
         //$this->viewBuilder()->setLayout('ajax');
@@ -80,8 +91,46 @@ class ImageController extends AppController
                 }
             }
         }
+    }
 
+    public function filter()
+    {
+        $this->request->allowMethod('ajax');
+        $this->autoRender = 'false';
+        $this->viewBuilder()->setLayout('ajax');
+
+        $this->log($this->request->getData());
+
+        $imagesTable = TableRegistry::getTableLocator()->get('Images');
+        $query = $imagesTable->find();
+            /*->where([
+                'id' > 3
+            ]);*/
+
+        $paginador = new Paginator();
+        $paginador->setConfig('limit', 2);
+
+        $images = $paginador->paginate($query);
+
+        $this->log($paginador->getPagingParams());
+        //$this->set(compact('image', 'images'));
         //$this->set('_serialize', ['content']);
-        //$this->set(compact('content'));
+
+        $view = new View();
+        $view->set(compact('images'));
+        $htmlGallery = stripcslashes( stripslashes( $view->renderLayout(null, 'gallery') ) );
+
+        $pagingParams = $paginador->getPagingParams();
+        $view->set(compact( 'pagingParams'));
+
+        $htmlPaginator = stripcslashes( stripslashes( $view->renderLayout(null, 'pagination') ) );
+        //$this->log((array) $html);
+        $content = $htmlGallery;
+        $pag = $htmlPaginator;
+
+
+        $this->set(compact('pag'));
+        $this->set(compact('content'));
+        $this->set('_serialize', ['content', 'pag']);
     }
 }
