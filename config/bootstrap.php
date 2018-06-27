@@ -57,7 +57,6 @@ use Cake\Utility\Security;
 //         ->toServer();
 // }
 
-Plugin::load('Images');
 /*
  * Read configuration file and inject configuration into various
  * CakePHP classes.

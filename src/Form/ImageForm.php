@@ -8,7 +8,6 @@
 
 namespace App\Form;
 
-use Cake\Event\EventManager;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
@@ -23,8 +22,10 @@ class ImageForm extends Form
 
     private $imageConfig;
 
+    private $imageType;
+
     /**
-     * @return mixed
+     * @return array
      */
     public function getImageConfig()
     {
@@ -32,17 +33,15 @@ class ImageForm extends Form
     }
 
     /**
-     * @param mixed $imageConfig
+     * @param array $imageConfig
      */
     public function setImageConfig($imageConfig)
     {
         $this->imageConfig = $imageConfig;
     }
 
-    private $imageType;
-
     /**
-     * @return null
+     * @return string
      */
     public function getImageType()
     {
@@ -50,7 +49,7 @@ class ImageForm extends Form
     }
 
     /**
-     * @param null $imageType
+     * @param string $imageType
      */
     public function setImageType($imageType)
     {
@@ -58,7 +57,7 @@ class ImageForm extends Form
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getImageSize()
     {
@@ -66,7 +65,7 @@ class ImageForm extends Form
     }
 
     /**
-     * @param mixed $imageSize
+     * @param array $imageSize
      */
     public function setImageSize($imageSize)
     {
@@ -79,7 +78,6 @@ class ImageForm extends Form
             ->addField('width', 'number')
             ->addField('height', 'number')
             ->addField('left', 'number');
-            //->addField('image', 'string');
     }
 
     protected function _buildValidator(Validator $validator)
@@ -150,11 +148,11 @@ class ImageForm extends Form
     {
         $imageName = $data['image']['name'];
         $imageTemp = $data['image']['tmp_name'];
-        $imagePath = 'webroot' . DS . 'upload' . DS . $imageName;
+        $imagePath = 'upload' . DS . $imageName;
         /*
-         * @var \Cake\ORM\Table $imageTable
-         *
          * Table to save data about uploaded image
+         *
+         * @var \Cake\ORM\Table $imageTable
          */
         $imagesTable = TableRegistry::getTableLocator()->get('Images');
         $image = $imagesTable->newEntity();
@@ -173,7 +171,7 @@ class ImageForm extends Form
             ]);
             if ($newImage !== false) {
                 $createResource = 'image' . $this->getImageType();
-                $createResource($newImage, ROOT . DS . $imagePath);
+                $createResource($newImage, ROOT . DS . 'webroot' . DS . $imagePath);
                 //imagedestroy($newImage);
             }
             else {

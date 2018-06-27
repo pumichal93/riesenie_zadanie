@@ -37,9 +37,9 @@ class ImageController extends AppController
     }
 
     private function setErrorFlash($errors) {
+        $messages = [];
         if (count($errors)) {
             $flat_errors = Hash::flatten($errors);
-            $messages = [];
             if (count($flat_errors) > 0) {
                 foreach ($flat_errors as $key => $error) {
                     $messages[preg_split('/\./', $key)[0]] = $error;
@@ -64,6 +64,12 @@ class ImageController extends AppController
         $this->redirect(['action' => 'get_image']);
         if ($this->request->is('post')) {
             if (!empty($this->request->getData()['image']['name'])) {
+
+                /*
+                 * Create form variable for validate and execution of upload image form
+                 *
+                 * @var $form Cake\Form\ImageForm
+                 */
                 $form = new ImageForm();
                 $form->setImageSize(getimagesize($this->request->getData('image.tmp_name')));
                 $form->setImageConfig(Configure::consumeOrFail('ImageStorage'));
@@ -72,7 +78,7 @@ class ImageController extends AppController
                     if (!($resolve)) {
                         $this->Flash->error($resolve);
                     }
-                    $this->Flash->success(__('File has been uploaded and inserted successfully.'));
+                    $this->Flash->success('File has been uploaded and inserted successfully.');
                 }
                 else {
                     $messages = $this->setErrorFlash($form->errors());
@@ -84,6 +90,9 @@ class ImageController extends AppController
         }
     }
 
+    /**
+     * function for apply filter query and page scroll
+     */
     public function filter()
     {
         $this->request->allowMethod('ajax');
@@ -101,6 +110,11 @@ class ImageController extends AppController
             $newQuery = $this->parser($filterQuery);
         }
 
+        /*
+         * apply filter query and as a parameter fo paginate function
+         *
+         * @var \Cake\ORM\Table
+         */
         $imagesTable = TableRegistry::getTableLocator()->get('Images');
         $query = $imagesTable->find();
         if ($newQuery) {

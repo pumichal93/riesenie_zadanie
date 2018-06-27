@@ -15,14 +15,14 @@ The framework source code can be found here: [cakephp/cakephp](https://github.co
 If Composer is installed globally, run
 
 ```bash
-composer create-project --prefer-dist cakephp/app
+composer install
 ```
 
-In case you want to use a custom app dir name (e.g. `/myapp/`):
+Create the posts database 
 
-```bash
-composer create-project --prefer-dist cakephp/app myapp
-```
+	mysql -u<username> -p < config/schema/riesenie.sql
+
+Set database settings in /config/app.php
 
 You can now either use your machine's webserver to view the default home page, or start
 up the built-in webserver with:
