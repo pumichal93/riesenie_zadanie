@@ -4,8 +4,14 @@ namespace App\Controller;
 
 trait QueryParserTrait
 {
-    // count of quotation must be same
-   public function CheckQuotation($input) {
+
+    /**
+     * Raw query input to check if there is right quotas
+     *
+     * @param $input string
+     * @return bool|string
+     */
+    public function CheckQuotation($input) {
 
         // check for double quote
         $doubleQ = preg_split('/\"/', $input);
@@ -61,7 +67,12 @@ trait QueryParserTrait
         return 'Wrong number of paranthesis';
     }
 
-    // kontrola ci je vstup string
+    /**
+     * Check if query variable is type of string
+     *
+     * @param $value string
+     * @return bool
+     */
     function isText($value) {
         $matches = null;
         preg_match('/^(["\'])(.*?)(\1)$/', $value, $matches);
@@ -72,6 +83,12 @@ trait QueryParserTrait
         return false;
     }
 
+    /**
+     * Check if query variable is type of number
+     *
+     * @param $value string
+     * @return bool
+     */
     function isNumber($value) {
         $matches = null;
         preg_match('/^[0-9]+$/', $value, $matches);
@@ -86,7 +103,6 @@ trait QueryParserTrait
     function changeSelectString($matches) {
         if (count($matches) > 0) {
             return preg_replace('/\s/', '§', $matches[0]);
-            //return $matches[0] . $newString . $matches[2];
         }
 
         return null;
@@ -178,6 +194,12 @@ trait QueryParserTrait
     }
 
 
+    /**
+     * Check if raw query is ok
+     *
+     * @param $query string
+     * @return array
+     */
     public function parser($query) {
         $result = [
             'error' => false,

@@ -9,15 +9,11 @@
 namespace App\Controller;
 
 use App\Form\ImageForm;
-use Cake\Database\Connection;
 use Cake\Datasource\Paginator;
 use Cake\Event\Event;
-use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Core\Configure;
-use Cake\ORM\Query;
-use Cake\Datasource\ConnectionManager;
 use Cake\View\View;
 
 class ImageController extends AppController
@@ -64,12 +60,7 @@ class ImageController extends AppController
     }
 
     public function add() {
-        //
-        $query = new Query(ConnectionManager::get('default'), TableRegistry::getTableLocator()->get('Images'));
 
-        //$this->request->allowMethod('ajax');
-        //$this->autoRender = 'false';
-        //$this->viewBuilder()->setLayout('ajax');
         $this->redirect(['action' => 'get_image']);
         if ($this->request->is('post')) {
             if (!empty($this->request->getData()['image']['name'])) {
