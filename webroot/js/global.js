@@ -1,5 +1,5 @@
 
-$( document ).ready(function() {
+
 
     // ajax function to get images by requested query or page number
     function getImages(page) {
@@ -41,11 +41,11 @@ $( document ).ready(function() {
     });
 
     // change page
-    $('#paginator li').on( "click", "a", function (e) {
+    $('#paginator').on( "click", "li", function (e) {
         e.preventDefault();
         let classList = e.currentTarget.parentNode.classList;
         if (!classList.contains('active')) {
             getImages(parseInt(e.currentTarget.innerText));
         }
     });
-});
+

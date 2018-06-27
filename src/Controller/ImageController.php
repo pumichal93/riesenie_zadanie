@@ -22,7 +22,7 @@ use Cake\View\View;
 
 class ImageController extends AppController
 {
-
+    use QueryParserTrait;
     public function initialize(){
         parent::initialize();
 
@@ -99,22 +99,36 @@ class ImageController extends AppController
         $this->autoRender = 'false';
         $this->viewBuilder()->setLayout('ajax');
 
-        $this->log($this->request->getData());
+        $newQuery = false;
+
+        $page = $this->request->getData('page');
+        $filterQuery = $this->request->getData('filter');
+        //$this->log(['page' => $page]);
+
+        if (strlen($filterQuery) > 2) {
+            //$this->log('set');
+            $newQuery = $this->parser($filterQuery);
+        }
 
         $imagesTable = TableRegistry::getTableLocator()->get('Images');
         $query = $imagesTable->find();
-            /*->where([
-                'id' > 3
-            ]);*/
+        if ($newQuery) {
+            if ($newQuery['error']) {
+                $this->Flash->error($newQuery['error']);
+            }
+            else {
+                $query->where($newQuery['query']);
+            }
+        }
+        //->where('name LIKE "%Selection%" OR width > 90');
 
         $paginador = new Paginator();
-        $paginador->setConfig('limit', 2);
+        if (isset($page)) {
+            $paginador->setConfig('page', $page);
+        }
+        $paginador->setConfig('limit', 4);
 
         $images = $paginador->paginate($query);
-
-        $this->log($paginador->getPagingParams());
-        //$this->set(compact('image', 'images'));
-        //$this->set('_serialize', ['content']);
 
         $view = new View();
         $view->set(compact('images'));

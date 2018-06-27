@@ -8,8 +8,11 @@ use Cake\Network\Exception\NotFoundException;
 use App\Form\ImageUpload;
 use App\Model\Entity\Image;
 $this->layout = false;
+
+$this->log($this->Paginator->templates('prevActive'));
+
 $this->Paginator->setTemplates([
-'number' => '<li><a href="#">{{text}}</a></li>'
+    'number' => '<li><a href="#" id="{{text}}">{{text}}</a></li>'
 ]);
 ?>
 <!DOCTYPE html>
@@ -74,11 +77,12 @@ $this->Paginator->setTemplates([
         ?>
         <?= $this->Form->control('filter',['id'=>'imageHeight','type' => 'textarea']); ?>
         <?= $this->Form->submit('Filter by query'); ?>
-        <div id="responseMessage"></div>
+        <button type="reset" onclick="window.location.reload();">Reset</button>
         <?= $this->Form->end(); ?>
     </div>
 
 </div>
+
 <div class="row">
     <div class="large-12">
         <div id="gallery">
@@ -93,12 +97,10 @@ $this->Paginator->setTemplates([
         <div id="paginator">
             <nav>
                 <ul class="pagination">
-                    <?= $this->Paginator->prev('&laquo; ' . __('previous'), ['escape' => false]) ?>
                     <?= $this->Paginator->numbers([
                     'after' => '</li>',
                     'before' => '<li class="pagination">'
                     ]) ?>
-                    <?= $this->Paginator->next(__('next') . ' &raquo;' , ['escape' => false]) ?>
                 </ul>
 
                 <p><?= $this->Paginator->counter() ?></p>

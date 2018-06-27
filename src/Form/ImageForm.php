@@ -133,11 +133,13 @@ class ImageForm extends Form
                             $this->setImageType($types[1]);
                             return true;
                         }
-
-                        return true;
+                        else {
+                            return 'Upload file with correct file type';
+                        }
                     }
-
-                    return 'Upload file with correct file type';
+                    else {
+                        return 'Type of image is not defined';
+                    }
                 }
             ]);
 
@@ -148,7 +150,7 @@ class ImageForm extends Form
     {
         $imageName = $data['image']['name'];
         $imageTemp = $data['image']['tmp_name'];
-        $imagePath = DS . 'upload' . DS . $imageName;
+        $imagePath = 'webroot' . DS . 'upload' . DS . $imageName;
         /*
          * @var \Cake\ORM\Table $imageTable
          *
@@ -162,16 +164,17 @@ class ImageForm extends Form
         $image->created = date("Y-m-d H:i:s");
         $image->path = $imagePath;
         if ($imagesTable->save($image)) {
-            $newImage = imagecrop(call_user_func('imagecreatefrom' . $this->getImageType(), $imageTemp), [
+            $createImage = 'imagecreatefrom' . $this->getImageType();
+            $newImage = imagecrop($createImage($imageTemp), [
                 'x' => $data['left'],
                 'y' => $data['top'],
                 'width' => $data['width'],
                 'height' => $data['height']
             ]);
             if ($newImage !== false) {
-
-                call_user_func('image' . $this->getImageType(), $newImage, ROOT . DS . $imagePath);
-                imagedestroy($newImage);
+                $createResource = 'image' . $this->getImageType();
+                $createResource($newImage, ROOT . DS . $imagePath);
+                //imagedestroy($newImage);
             }
             else {
                 return 'Unknown error in resize execution';

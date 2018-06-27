@@ -27,7 +27,7 @@ Configure::write('ImageStorage', [
     ],
     'types' => [
         'png',
-        'jpg'
+        'jpeg'
     ],
     'separation' => true
 ]);
